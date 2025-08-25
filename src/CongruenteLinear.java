@@ -7,16 +7,22 @@ import java.util.Locale.Category;
 
 public class CongruenteLinear {
     
-    public static void main(String[] args) {
-        try {
-            FileWriter myFile = new FileWriter("resultado_congruente_linear_seed_"+args[0]+".txt");
-            congruenteLinear(Integer.parseInt(args[0]), myFile);
-            myFile.close();
-        } catch (IOException e) {
-            System.out.println("An error occured.");
-            e.printStackTrace();
-        }
+    long seed;
+    long max_generated;
+    long count = 0;
+    long a = 1140671485;
+    long c = 12820163;
+    long M = 16777216;
+
+    public static CongruenteLinear Instance;
+
+    public CongruenteLinear(long seed, long max_generated)
+    {
+        this.seed = seed;
+        this.max_generated = max_generated;
+        Instance = this;
     }
+    
     public static void congruenteLinear(long seed, FileWriter fileWriter) {
         NumberFormat formatter = new DecimalFormat("0.0000000000000000000");
         long a = 1140671485;
@@ -39,5 +45,16 @@ public class CongruenteLinear {
             }
             counter++;
         }
+    }
+
+    public double congruenteLerp(float min, float max)
+    {
+        count++;
+        if(count >= max_generated)
+            return -1;
+        seed = ((seed * a + c)%M);
+        double value = (double)seed/M;
+        value = min + (max - min) * value;
+        return value; 
     }
 }

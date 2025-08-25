@@ -4,8 +4,8 @@ public class Evento implements Comparable
     public int FilaID;
     public enum TipoDeEvento{Chegada, Saida}
     public TipoDeEvento tipo;
-    public float Tempo;
-    public Evento(int FilaID, TipoDeEvento tipo, float Tempo)
+    public double Tempo;
+    public Evento(int FilaID, TipoDeEvento tipo, double Tempo)
     {
         this.FilaID = FilaID;
         this.tipo = tipo;
@@ -13,7 +13,12 @@ public class Evento implements Comparable
     }
     @Override
     public int compareTo(Object o) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'compareTo'");
+        Evento e = (Evento) o;
+        if (Tempo > e.Tempo)
+            return 1;
+        else if (Tempo < e.Tempo)
+            return -1;
+        return 0; 
+        
     }
 }
