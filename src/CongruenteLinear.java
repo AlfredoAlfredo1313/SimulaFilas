@@ -2,8 +2,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.text.DecimalFormat;
-import java.util.Locale;
-import java.util.Locale.Category;
 
 public class CongruenteLinear {
     
@@ -47,7 +45,12 @@ public class CongruenteLinear {
         }
     }
 
-    public double congruenteLerp(float min, float max)
+    public boolean HasNext()
+    {
+        return count < max_generated;
+    }
+
+    public double GetNext(double min, double max)
     {
         count++;
         if(count >= max_generated)
