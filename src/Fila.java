@@ -1,15 +1,12 @@
-import java.util.Dictionary;
 import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Queue;
 
 public class Fila {
     public int Servers, Capacity, Status, Loss, FilaID;
     public double MinArrrival, MaxArrival, MinServe, MaxServe, TempoGlobal;
     public HashMap<Integer, Double> ServerStatus = new HashMap<Integer, Double>();
+    private Simulador simulador;
 
-
-    public Fila(int FilaID, int Servers, int Capacity, double MinArrrival, double MaxArrival, double MinServe, double MaxServe) {
+    public Fila(int FilaID, int Servers, int Capacity, double MinArrrival, double MaxArrival, double MinServe, double MaxServe, Simulador simulador) {
         this.FilaID = FilaID;
         this.Servers = Servers;
         this.Capacity = Capacity;
@@ -17,18 +14,21 @@ public class Fila {
         this.MaxArrival = MaxArrival;
         this.MinServe = MinServe;
         this.MaxServe = MaxServe;
+        this.simulador = simulador;
     }
 
     public void Chegada(Evento e)
     {
+        MarcaTempo(e.Tempo);
         if(Status >= Capacity) {
             Loss++;
-            return;
         }
-        MarcaTempo(e.Tempo);   
-        Status++;
-        if (Status <= Servers)
-            NovoEvento(Evento.TipoDeEvento.Saida);
+        else{
+            Status++;
+            // Acho que podia estar fora do else mas só pra garantir
+            if (Status <= Servers)
+                NovoEvento(Evento.TipoDeEvento.Saida);
+        }
         NovoEvento(Evento.TipoDeEvento.Chegada);
     }
 
@@ -60,12 +60,12 @@ public class Fila {
             min = MinServe;
             max = MaxServe;
         }
-        double timestamp = CongruenteLinear.Instance.GetNext(min, max);
+        double timestamp = simulador.getRandom().GetNext(min, max);
         if (timestamp <= 0)
             return;
         timestamp += TempoGlobal;
         Evento saida = new Evento(FilaID, tipo, timestamp);
-        App.Eventos.add(saida);
+        simulador.NovoEvento(saida);
     }
 
     @Override

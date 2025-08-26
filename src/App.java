@@ -13,8 +13,20 @@ import java.util.PriorityQueue;
 public class App {
     public static PriorityQueue<Evento> Eventos;
     public static void main(String[] args) throws Exception {
-        Fila f0 = new Fila(0, 1, 5, 2, 5, 3, 5);
-        //Fila f1 = new Fila(1, 2, 5, 2, 5, 3, 5);
+        CongruenteLinear random = new CongruenteLinear(0, 100000);
+        Simulador s = new Simulador(1, 1, 5, 2, 5, 3, 5, random, 2);
+        while (s.HasNextStep())
+        {
+            s.Step();
+        }
+        System.out.println(s);
+        return;  
+    }
+
+    // Não vai funcionar no estado atual
+    public static void old_main(String[] args) {
+        Fila f0 = new Fila(0, 1, 5, 2, 5, 3, 5, null);
+        //Fila f1 = new Fila(0, 2, 5, 2, 5, 3, 5);
         ArrayList<Fila> filas = new ArrayList<>(java.util.Arrays.asList(f0));
         CongruenteLinear cong = new CongruenteLinear(0, 100000);
         Eventos = new PriorityQueue<>();
@@ -32,6 +44,6 @@ public class App {
                 f.Saida(e);
         }
 
-        filas.forEach(System.out::print);        
+        filas.forEach(System.out::print);   
     }
 }

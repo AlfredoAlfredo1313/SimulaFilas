@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.text.NumberFormat;
 import java.text.DecimalFormat;
 
-public class CongruenteLinear {
+public class CongruenteLinear implements IRandom{
     
     long seed;
     long max_generated;
