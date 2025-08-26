@@ -14,14 +14,14 @@ public class App {
     public static PriorityQueue<Evento> Eventos;
     public static void main(String[] args) throws Exception {
         Fila f0 = new Fila(0, 1, 5, 2, 5, 3, 5);
-        Fila f1 = new Fila(1, 2, 5, 2, 5, 3, 5);
-        ArrayList<Fila> filas = new ArrayList<>(java.util.Arrays.asList(f0, f1));
+        //Fila f1 = new Fila(1, 2, 5, 2, 5, 3, 5);
+        ArrayList<Fila> filas = new ArrayList<>(java.util.Arrays.asList(f0));
         CongruenteLinear cong = new CongruenteLinear(0, 100000);
         Eventos = new PriorityQueue<>();
         Evento e1 = new Evento(0, Evento.TipoDeEvento.Chegada, 2);
         Eventos.add(e1);
-        Evento e2 = new Evento(1, Evento.TipoDeEvento.Chegada, 2);
-        Eventos.add(e2);
+        //Evento e2 = new Evento(1, Evento.TipoDeEvento.Chegada, 2);
+        //Eventos.add(e2);
         
         while (cong.HasNext() && !Eventos.isEmpty()) {
             Evento e = Eventos.poll();
@@ -32,8 +32,6 @@ public class App {
                 f.Saida(e);
         }
 
-        System.out.println(f0);
-        System.out.println(f1);
-
+        filas.forEach(System.out::print);        
     }
 }
