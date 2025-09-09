@@ -1,18 +1,29 @@
 
-public class Evento implements Comparable
+public class Evento implements Comparable<Evento>
 {
     public int FilaID;
-    public enum TipoDeEvento{Chegada, Saida}
+    public int RedeID;
+    public enum TipoDeEvento{Chegada, Saida, Passagem}
     public TipoDeEvento tipo;
     public double Tempo;
+
+    // Contrutor para eventos em filas NÃO em rede.
     public Evento(int FilaID, TipoDeEvento tipo, double Tempo)
     {
         this.FilaID = FilaID;
         this.tipo = tipo;
         this.Tempo = Tempo;
     }
+    // Contrutor para eventos em filas em rede.
+    public Evento(int RedeID, int FilaID, TipoDeEvento tipo, double Tempo)
+    {
+        this.RedeID = RedeID;
+        this.FilaID = FilaID;
+        this.tipo = tipo;
+        this.Tempo = Tempo;
+    }
     @Override
-    public int compareTo(Object o) {
+    public int compareTo(Evento o) {
         Evento e = (Evento) o;
         if (Tempo > e.Tempo)
             return 1;

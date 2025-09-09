@@ -4,9 +4,9 @@ public class Fila {
     public int Servers, Capacity, Status, Loss, FilaID;
     public double MinArrrival, MaxArrival, MinServe, MaxServe, TempoGlobal;
     public HashMap<Integer, Double> ServerStatus = new HashMap<Integer, Double>();
-    private Simulador simulador;
+    private RedeFilas Rede;
 
-    public Fila(int FilaID, int Servers, int Capacity, double MinArrrival, double MaxArrival, double MinServe, double MaxServe, Simulador simulador) {
+    public Fila(int FilaID, int Servers, int Capacity, double MinArrrival, double MaxArrival, double MinServe, double MaxServe, RedeFilas rede) {
         this.FilaID = FilaID;
         this.Servers = Servers;
         this.Capacity = Capacity;
@@ -14,7 +14,7 @@ public class Fila {
         this.MaxArrival = MaxArrival;
         this.MinServe = MinServe;
         this.MaxServe = MaxServe;
-        this.simulador = simulador;
+        this.Rede = rede;
     }
 
     public void Chegada(Evento e)
@@ -27,9 +27,9 @@ public class Fila {
             Status++;
             // Acho que podia estar fora do else mas só pra garantir
             if (Status <= Servers)
-                NovoEvento(Evento.TipoDeEvento.Saida);
+                Rede.NovoEvento(Evento.TipoDeEvento.Saida,this);
         }
-        NovoEvento(Evento.TipoDeEvento.Chegada);
+        Rede.NovoEvento(Evento.TipoDeEvento.Chegada,this);
     }
 
     public void Saida(Evento e)
@@ -37,7 +37,28 @@ public class Fila {
         MarcaTempo(e.Tempo);
         Status--;
         if (Status >= Servers)
-            NovoEvento(Evento.TipoDeEvento.Saida);
+            Rede.NovoEvento(Evento.TipoDeEvento.Saida,this);
+    }
+
+    public void Passagem(Evento e, boolean inicio)
+    {
+        MarcaTempo(e.Tempo);
+        if (inicio)
+        {
+            Status--;
+            if (Status >= Servers)
+                Rede.NovoEvento(Evento.TipoDeEvento.Passagem, this);
+        }
+        else
+        {
+            if(Status >= Capacity) Loss++;
+            else{
+                Status++;
+                // Acho que podia estar fora do else mas só pra garantir
+                if (Status <= Servers)
+                    Rede.NovoEvento(Evento.TipoDeEvento.Saida, this);
+            }
+        }
     }
 
     public void MarcaTempo(double updatedTime)
@@ -48,7 +69,7 @@ public class Fila {
             delta += ServerStatus.get(Status);
         ServerStatus.put(Status, delta);
     }
-
+    /*
     public void NovoEvento(Evento.TipoDeEvento tipo)
     {
         double min, max;
@@ -56,9 +77,13 @@ public class Fila {
             min = MinArrrival;
             max = MaxArrival;
         }
-        else {
+        else if (tipo == Evento.TipoDeEvento.Saida) {
             min = MinServe;
             max = MaxServe;
+        }
+        else {
+            System.err.println("Tipo de evento inválido");
+            return;
         }
         double timestamp = simulador.getRandom().GetNext(min, max);
         if (timestamp <= 0)
@@ -67,6 +92,7 @@ public class Fila {
         Evento saida = new Evento(FilaID, tipo, timestamp);
         simulador.NovoEvento(saida);
     }
+     */
 
     @Override
     public String toString()
@@ -81,5 +107,9 @@ public class Fila {
         });
         s.append(String.format("PERDIDOS: %d\n", Loss));
         return s.toString();
+    }
+
+    public void SetRede(RedeFilas redeFilas) {
+        this.Rede = redeFilas;
     }
 }
