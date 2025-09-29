@@ -16,21 +16,26 @@ public class App {
     public static void main(String[] args) throws Exception {
         CongruenteLinear random = new CongruenteLinear(0, 100000);
         //Simulador s = new Simulador(1, 1, 5, 2, 5, 3, 5, random, 2);
+        Simulador teste = new Simulador("model(2).yml");
+        teste.PrintEventos();
+        
 
-        ArrayList<Fila> filas = new ArrayList<>();
-        HashMap<Integer,Integer> conexoes = new HashMap<>();
-        filas.add(new Fila(0, 2, 3, 1, 4, 3, 4, null));
-        filas.add(new Fila(1, 1, 5, -1, -1, 2, 3, null));
-        conexoes.put(0,1);
-        Simulador s = new Simulador(filas, conexoes, 0, random);
 
-        while (s.HasNextStep())
-        {
-            s.Step();
-        }
-        s.End();
-        System.out.println(s);
-        return;  
+
+        // ArrayList<Fila> filas = new ArrayList<>();
+        // HashMap<Integer,Integer> conexoes = new HashMap<>();
+        // filas.add(new Fila(0, 2, 3, 1, 4, 3, 4, null));
+        // filas.add(new Fila(1, 1, 5, -1, -1, 2, 3, null));
+        // conexoes.put(0,1);
+        // Simulador s = new Simulador(filas, conexoes, 0, random);
+
+        // while (s.HasNextStep())
+        // {
+        //     s.Step();
+        // }
+        // s.End();
+        // System.out.println(s);
+        // return;  
     }
 
     // Não vai funcionar no estado atual

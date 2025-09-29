@@ -32,4 +32,9 @@ public class Evento implements Comparable<Evento>
         return 0; 
         
     }
+
+    @Override
+    public String toString() {
+        return "Rede: " + RedeID + " Fila: " + FilaID + " Tipo: "+ tipo.name() + " Tempo: " + Tempo;
+    }
 }
