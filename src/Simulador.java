@@ -38,6 +38,8 @@ public class Simulador {
     {
         this.Eventos = new PriorityQueue<>();
         LeituraArquivos la = new LeituraArquivos(SimFilePath, this);
+        this.Rede = la.getRedeFilas();
+        this.Random = la.getRandom();
     }
 
     public boolean HasNextStep()
@@ -75,6 +77,11 @@ public class Simulador {
         for (Evento evento : Eventos) {
             System.out.println(evento);
         }
+    }
+
+    public void PrintFilas()
+    {
+        System.out.println(Rede);
     }
 
     @Override

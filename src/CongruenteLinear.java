@@ -5,8 +5,9 @@ import java.text.DecimalFormat;
 
 public class CongruenteLinear implements IRandom{
     
-    long seed;
-    long max_generated;
+    Long[] seeds;
+    long current_seed;
+    long numbers_per_seed;
     long count = 0;
     long a = 1140671485;
     long c = 12820163;
@@ -14,10 +15,11 @@ public class CongruenteLinear implements IRandom{
 
     public static CongruenteLinear Instance;
 
-    public CongruenteLinear(long seed, long max_generated)
+    public CongruenteLinear(Long[] seeds, long numbers_per_seed)
     {
-        this.seed = seed;
-        this.max_generated = max_generated;
+        this.seeds = seeds;
+        this.current_seed = seeds[0];
+        this.numbers_per_seed = numbers_per_seed;
         Instance = this;
     }
     
@@ -47,16 +49,18 @@ public class CongruenteLinear implements IRandom{
 
     public boolean HasNext()
     {
-        return count < max_generated;
+        return count < (numbers_per_seed * seeds.length);
     }
 
     public double GetNext(double min, double max)
     {
         count++;
-        if(count >= max_generated)
+        if(count >= (numbers_per_seed * seeds.length))
             return -1;
-        seed = ((seed * a + c)%M);
-        double value = (double)seed/M;
+        if(count > numbers_per_seed)
+            current_seed = seeds[(int)(count/numbers_per_seed)];
+        current_seed = ((current_seed * a + c)%M);
+        double value = (double)current_seed/M;
         value = min + (max - min) * value;
         return value; 
     }

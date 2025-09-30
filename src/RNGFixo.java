@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class RNGFixo implements IRandom{
     private ArrayList<Double> valores;
-    private Integer currentIDX;
+    private Integer currentIDX = 0;
 
     public RNGFixo(ArrayList<Double> a)
     {

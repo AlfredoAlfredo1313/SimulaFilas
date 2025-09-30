@@ -14,11 +14,11 @@ import java.util.PriorityQueue;
 public class App {
     public static PriorityQueue<Evento> Eventos;
     public static void main(String[] args) throws Exception {
-        CongruenteLinear random = new CongruenteLinear(0, 100000);
+        // CongruenteLinear random = new CongruenteLinear(0, 100000);
         //Simulador s = new Simulador(1, 1, 5, 2, 5, 3, 5, random, 2);
-        Simulador teste = new Simulador("model(2).yml");
-        teste.PrintEventos();
-        
+        Simulador s = new Simulador("model(2).yml");
+        s.PrintEventos();
+        s.PrintFilas();
 
 
 
@@ -29,36 +29,13 @@ public class App {
         // conexoes.put(0,1);
         // Simulador s = new Simulador(filas, conexoes, 0, random);
 
-        // while (s.HasNextStep())
-        // {
-        //     s.Step();
-        // }
-        // s.End();
-        // System.out.println(s);
+        while (s.HasNextStep())
+        {
+            s.Step();
+        }
+        s.End();
+        System.out.println(s);
         // return;  
     }
 
-    // Não vai funcionar no estado atual
-    public static void old_main(String[] args) {
-        Fila f0 = new Fila(0, 1, 5, 2, 5, 3, 5, null);
-        //Fila f1 = new Fila(0, 2, 5, 2, 5, 3, 5);
-        ArrayList<Fila> filas = new ArrayList<>(java.util.Arrays.asList(f0));
-        CongruenteLinear cong = new CongruenteLinear(0, 100000);
-        Eventos = new PriorityQueue<>();
-        Evento e1 = new Evento(0, Evento.TipoDeEvento.Chegada, 2);
-        Eventos.add(e1);
-        //Evento e2 = new Evento(1, Evento.TipoDeEvento.Chegada, 2);
-        //Eventos.add(e2);
-        
-        while (cong.HasNext() && !Eventos.isEmpty()) {
-            Evento e = Eventos.poll();
-            Fila f = filas.get(e.FilaID);
-            if(e.tipo == Evento.TipoDeEvento.Chegada)
-                f.Chegada(e);
-            else
-                f.Saida(e);
-        }
-
-        filas.forEach(System.out::print);   
-    }
 }

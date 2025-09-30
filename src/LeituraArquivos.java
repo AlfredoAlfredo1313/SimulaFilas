@@ -9,17 +9,22 @@ public class LeituraArquivos {
 
     private Boolean initialized;
     private ArrayList<Fila> filas;
+    private RedeFilas redeFilas;
     private Simulador sim;
     private HashMap<String,Integer> nomesfilas;
-    private HashMap<Integer,String> conexoes;
+    private HashMap<Integer,Integer> conexoes;  // indice Fila para indice Fila
+    private HashMap<Integer,Double> probabilidades; // índice conexão para probabilidade
     private Integer nextID = 0;
     private IRandom rng;
+    private ArrayList<Long> rng_seeds = new ArrayList<>();
+    private Long rng_numbers_per_seed = -1L;
 
     public LeituraArquivos(String caminho, Simulador sim)
     {
         this.sim = sim;
         this.nomesfilas = new HashMap<>();
         this.conexoes = new HashMap<>();
+        this.probabilidades = new HashMap<>();
         this.filas = new ArrayList<>();
         try {
             this.fileReader = new BufferedReader(new FileReader(caminho));
@@ -43,6 +48,7 @@ public class LeituraArquivos {
                 line = this.fileReader.readLine();
                 
             }
+            this.redeFilas = new RedeFilas(filas, conexoes, sim);
         } catch (Exception e) {
             System.out.println(e);
             this.initialized = false;
@@ -68,6 +74,7 @@ public class LeituraArquivos {
                 nextID++;
             }
         line = this.fileReader.readLine();
+        if (line == null) break;
         }
         
     }
@@ -110,6 +117,7 @@ public class LeituraArquivos {
                 nome = line.trim().split(":")[0];
             }
             line = this.fileReader.readLine();
+            if (line == null) break;
         }
         if (ready)
         {
@@ -131,37 +139,74 @@ public class LeituraArquivos {
         System.out.println(filas);
     }
 
-    public void rede()
+    public void rede() throws IOException
     {
         System.out.println("Network");
         // Socorro
+        String line = this.fileReader.readLine();
+        String source = "";
+        String target = "";
+        Double probability = -1.0;
+        Integer idx = 0;
+        Boolean ready = false;
+            while (line.contains(":")) {
+                if (line.contains("-") && !ready) ready = true;
+                else if (line.contains("-"))
+                {
+                    conexoes.put(nomesfilas.get(source), nomesfilas.get(target));
+                    probabilidades.put(idx, probability);
+                    idx++;
+                }
+                if (line.contains("source")) source = line.split(":")[1].trim();
+                else if (line.contains("target")) target = line.split(":")[1].trim();
+                else if (line.contains("probability")) probability = Double.parseDouble(line.split(":")[1].trim());
+
+
+                line = this.fileReader.readLine();
+                if (line == null) break;
+            }
     }
 
     public void rng(String line) throws IOException
     {
         System.out.println("RNG");
-        if (line.contains("rndnumbers"))
+        if (line.contains("rndnumbers:"))
         {
             ArrayList<Double> nums = new ArrayList<>();
             line = this.fileReader.readLine();
             while (line.contains("-")) {
                 nums.add(Double.parseDouble(line.split("-")[1].trim()));
                 line = this.fileReader.readLine();
+                if (line == null) break;
             }
             rng = new RNGFixo(nums);
         }
-        else if (line.contains("rndnumbersPerSeed"))
+        else if (line.contains("rndnumbersPerSeed:"))
         {
-            
+            rng_numbers_per_seed = Long.parseLong(line.split(":")[1].trim());
         }
-        else if (line.contains("seeds"))
+        else if (line.contains("seeds:"))
         {
-
+            line = this.fileReader.readLine();
+            while (line.contains("-")) {
+                rng_seeds.add(Long.parseLong(line.split("-")[1].trim()));
+                line = this.fileReader.readLine();
+                if (line == null) break;
+            }
+        }
+        if (!rng_seeds.isEmpty() && rng_numbers_per_seed != -1L)
+        {
+            rng = new CongruenteLinear(rng_seeds.toArray(new Long[1]), rng_numbers_per_seed);
         }
     }
 
     public boolean initialized()
     {
         return initialized;
+    }
+
+    public RedeFilas getRedeFilas() {return redeFilas;}
+    public IRandom getRandom() {
+        return rng;
     }
 }
