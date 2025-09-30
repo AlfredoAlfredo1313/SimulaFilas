@@ -21,7 +21,7 @@ public class Simulador {
             Fila f = new Fila(i, Servers, Capacity, MinArrrival, MaxArrival, MinServe, MaxServe, null);
             filas.add(f);
         }
-        this.Rede = new RedeFilas(filas, null, this);
+        this.Rede = new RedeFilas(filas, null, this, null);
         Eventos.add(new Evento(0, Evento.TipoDeEvento.Chegada, FirstArrivalTime));
     }
 
@@ -30,7 +30,7 @@ public class Simulador {
     {
         this.Eventos = new PriorityQueue<>();
         this.Random = Random;
-        this.Rede = new RedeFilas(filas, conexoes, this);
+        this.Rede = new RedeFilas(filas, conexoes, this, null);
         Eventos.add(new Evento(0,fila_de_entrada, Evento.TipoDeEvento.Chegada, 1.5));
     }
 

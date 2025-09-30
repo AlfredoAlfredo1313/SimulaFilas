@@ -47,7 +47,10 @@ public class Fila {
         {
             Status--;
             if (Status >= Servers)
-                Rede.NovoEvento(Evento.TipoDeEvento.Passagem, this);
+
+                //Fila lida apenas com Chegada e Saida. E RedeFilas determina se a Saida é mesmo uma Saida ou passagem (basicamente como ja tava sendo feito)  
+                //Rede.NovoEvento(Evento.TipoDeEvento.Passagem, this);
+                Rede.NovoEvento(Evento.TipoDeEvento.Saida, this);
         }
         else
         {

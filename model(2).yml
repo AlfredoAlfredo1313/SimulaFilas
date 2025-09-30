@@ -48,6 +48,7 @@ queues:
       maxService: 60.0
    Q4: 
       servers: 3
+      capacity : 2
       minService: 5.0
       maxService: 15.0
 

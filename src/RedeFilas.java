@@ -5,13 +5,15 @@ public class RedeFilas {
     public Double TempoGlobal;
     private ArrayList<Fila> Filas;
     private HashMap<Integer,Integer> Conexoes;
+    private HashMap<Integer, MapaConex> MapaConexoes;
     private Simulador simulador;
 
-    public RedeFilas(ArrayList<Fila> filas, HashMap<Integer,Integer> conexoes, Simulador sim)
+    public RedeFilas(ArrayList<Fila> filas, HashMap<Integer,Integer> conexoes, Simulador sim, HashMap<Integer, MapaConex> mapaConexoes)
     {
         this.Filas = filas;
         this.Conexoes = conexoes;
         this.simulador = sim;
+        this.MapaConexoes = mapaConexoes;
         // Feio mas pra teste
         for (Fila fila : filas) {
             fila.SetRede(this);
@@ -38,13 +40,14 @@ public class RedeFilas {
         TempoGlobal = e.Tempo;
         // Chama o método da fila de início da passagem
         Filas.get(e.FilaID).Passagem(e, true);
-        // Chama o método pro outro lado da passagem, presume que é uma conexão 1 pra 1
-        Filas.get(Conexoes.get(e.FilaID)).Passagem(e, false);
+
+        Filas.get(e.TargetID).Passagem(e, false);
     }
 
     public void NovoEvento(Evento.TipoDeEvento tipo, Fila fila)
     {
         double min, max;
+        int target_id = -1;
         if (tipo == Evento.TipoDeEvento.Chegada) {
             min = fila.MinArrrival;
             max = fila.MaxArrival;
@@ -52,11 +55,11 @@ public class RedeFilas {
         else if (tipo == Evento.TipoDeEvento.Saida) {
             min = fila.MinServe;
             max = fila.MaxServe;
-            if (Conexoes.containsKey(fila.FilaID)) tipo = Evento.TipoDeEvento.Passagem;
-        }
-        else if (tipo == Evento.TipoDeEvento.Passagem) {
-            min = fila.MinArrrival;
-            max = fila.MaxArrival;
+            //int passagem = MapaConex.GetTarget(max, 0)
+            target_id = MapaConex.GetTarget(fila.FilaID, simulador.getRandom());
+            if (target_id >= 0) {
+                tipo = Evento.TipoDeEvento.Passagem;
+            }
         }
         else {
             System.err.println("Tipo de evento inválido");
@@ -66,7 +69,11 @@ public class RedeFilas {
         if (timestamp <= 0)
             return;
         timestamp += TempoGlobal;
-        Evento ev = new Evento(fila.FilaID, tipo, timestamp);
+        Evento ev;
+        if(target_id >= 0)
+            ev = new Evento(fila.FilaID, tipo, timestamp, target_id);
+        else
+            ev = new Evento(fila.FilaID, tipo, timestamp);
         simulador.NovoEvento(ev);
     }
 
