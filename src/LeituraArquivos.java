@@ -96,6 +96,7 @@ public class LeituraArquivos {
                 if (ready)
                 {
                     filaAtual.setFilaID(filas.size());
+                    filaAtual.nome = nome;
                     Fila novaFila = filaAtual.getFila();
                     
                     if (!nomesfilas.keySet().contains(nome))
@@ -126,6 +127,7 @@ public class LeituraArquivos {
         if (ready)
         {
             filaAtual.setFilaID(filas.size());
+            filaAtual.nome = nome;
             Fila novaFila = filaAtual.getFila();
 
             if (!nomesfilas.keySet().contains(nome))
@@ -177,6 +179,7 @@ public class LeituraArquivos {
                 }
                 if (line.contains("source") && !invalida){ 
                     source = line.split(":")[1].trim();
+
                     source_id = nomesfilas.get(source);
                     if (source_id == null) 
                         invalida = true;
@@ -236,4 +239,6 @@ public class LeituraArquivos {
     public IRandom getRandom() {
         return rng;
     }
+
+    public ArrayList<Long> getSeeds() {return rng_seeds;}
 }

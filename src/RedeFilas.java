@@ -4,16 +4,12 @@ import java.util.HashMap;
 public class RedeFilas {
     public Double TempoGlobal;
     private ArrayList<Fila> Filas;
-    private HashMap<Integer,Integer> Conexoes;
-    private HashMap<Integer, MapaConex> MapaConexoes;
     private Simulador simulador;
 
     public RedeFilas(ArrayList<Fila> filas, HashMap<Integer,Integer> conexoes, Simulador sim, HashMap<Integer, MapaConex> mapaConexoes)
     {
         this.Filas = filas;
-        this.Conexoes = conexoes;
         this.simulador = sim;
-        this.MapaConexoes = mapaConexoes;
         // Feio mas pra teste
         for (Fila fila : filas) {
             fila.SetRede(this);

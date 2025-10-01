@@ -5,6 +5,7 @@ public class FilaFactory {
     public int Servers, Capacity, FilaID;
     public double MinArrrival, MaxArrival, MinServe, MaxServe;
     private RedeFilas Rede;
+    public String nome;
 
     public void setCapacity(int capacity) {
         Capacity = capacity;
@@ -32,6 +33,6 @@ public class FilaFactory {
     }
     public Fila getFila()
     {
-        return new Fila(FilaID, Servers, Capacity, MinArrrival, MaxArrival, MinServe, MaxServe, Rede);
+        return new Fila(FilaID, Servers, Capacity, MinArrrival, MaxArrival, MinServe, MaxServe, Rede, nome);
     }
 }

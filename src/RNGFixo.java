@@ -10,8 +10,8 @@ public class RNGFixo implements IRandom{
     }
 
     @Override
-    public boolean HasNext() {
-        return !(currentIDX >= valores.size());
+    public HasNext HasNext() {
+        return !(currentIDX >= valores.size())? HasNext.HasNext : HasNext.Ended;
     }
 
     @Override

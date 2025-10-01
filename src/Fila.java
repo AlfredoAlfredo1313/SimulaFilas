@@ -3,10 +3,11 @@ import java.util.HashMap;
 public class Fila {
     public int Servers, Capacity, Status, Loss, FilaID;
     public double MinArrrival, MaxArrival, MinServe, MaxServe, TempoGlobal;
+    public String nome;
     public HashMap<Integer, Double> ServerStatus = new HashMap<Integer, Double>();
     private RedeFilas Rede;
 
-    public Fila(int FilaID, int Servers, int Capacity, double MinArrrival, double MaxArrival, double MinServe, double MaxServe, RedeFilas rede) {
+    public Fila(int FilaID, int Servers, int Capacity, double MinArrrival, double MaxArrival, double MinServe, double MaxServe, RedeFilas rede, String nome) {
         this.FilaID = FilaID;
         this.Servers = Servers;
         this.Capacity = Capacity;
@@ -15,12 +16,13 @@ public class Fila {
         this.MinServe = MinServe;
         this.MaxServe = MaxServe;
         this.Rede = rede;
+        this.nome = nome;
     }
 
     public void Chegada(Evento e)
     {
         MarcaTempo(e.Tempo);
-        if(Status >= Capacity) {
+        if(Status >= Capacity && Capacity > 0) {
             Loss++;
         }
         else{
@@ -54,7 +56,7 @@ public class Fila {
         }
         else
         {
-            if(Status >= Capacity) Loss++;
+            if(Status >= Capacity && Capacity > 0) Loss++;
             else{
                 Status++;
                 // Acho que podia estar fora do else mas só pra garantir
@@ -101,7 +103,7 @@ public class Fila {
     public String toString()
     {
         StringBuilder s = new StringBuilder();
-        s.append(String.format("Fila %d: G/G/%d/%d TEMPO GLOBAL: %.2f\n", FilaID, Servers, Capacity, TempoGlobal));
+        s.append(String.format("Fila %s: G/G/%d%s TEMPO GLOBAL: %.2f\n", nome, Servers, Capacity > 0? String.format("/%d", Capacity) : "", TempoGlobal));
         ServerStatus.forEach((k, v) -> {
             String per = String.format("%.2f",v/TempoGlobal * 100);
             s.append("Status: ").append(k).append(", Tempo: ").

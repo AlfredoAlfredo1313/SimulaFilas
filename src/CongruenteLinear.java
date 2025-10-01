@@ -7,8 +7,10 @@ public class CongruenteLinear implements IRandom{
     
     Long[] seeds;
     long current_seed;
+    int current_seed_index = 0;
     long numbers_per_seed;
     long count = 0;
+    long total_count;
     long a = 1140671485;
     long c = 12820163;
     long M = 16777216;
@@ -47,21 +49,32 @@ public class CongruenteLinear implements IRandom{
         }
     }
 
-    public boolean HasNext()
+    public HasNext HasNext()
     {
-        return count < (numbers_per_seed * seeds.length);
+        if (total_count >= (numbers_per_seed * seeds.length))
+            return HasNext.Ended;
+        if (count >= numbers_per_seed)
+            return HasNext.NextSeed;
+        return HasNext.HasNext;
     }
 
     public double GetNext(double min, double max)
     {
         count++;
-        if(count >= (numbers_per_seed * seeds.length))
+        total_count++;
+        if(total_count >= (numbers_per_seed * seeds.length))
             return -1;
-        if(count > numbers_per_seed)
-            current_seed = seeds[(int)(count/numbers_per_seed)];
+        if(count > numbers_per_seed){
+            if(current_seed_index >= seeds.length)
+                return -1;
+            count = 1;
+            current_seed_index++;
+            current_seed = seeds[(int)(current_seed_index)];
+        }
         current_seed = ((current_seed * a + c)%M);
         double value = (double)current_seed/M;
         value = min + (max - min) * value;
         return value; 
     }
+
 }

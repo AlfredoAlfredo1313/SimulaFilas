@@ -4,6 +4,10 @@
  */
 
 public interface IRandom {
-    public boolean HasNext();
+    public HasNext HasNext();
     public double GetNext(double min, double max);
+
+    public enum HasNext {
+        HasNext, Ended, NextSeed
+    }
 }
